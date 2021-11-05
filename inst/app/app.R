@@ -1,7 +1,7 @@
 library(shiny)
 library(shiny.semantic)
-# library(ships)
-devtools::load_all(".")
+library(ships)
+#devtools::load_all(".")
 
 ui <- semanticPage(
     titlePanel("Ship movements - December 2016", windowTitle = "ships"),
@@ -62,12 +62,10 @@ server <- function(input, output, session) {
                       vessel_type == input$vessel_type),
                 ]
             rv$info <- data.frame(
-                "." = c("ID", "Time", "Destination", "Speed", "Flag"),
-                "vessel info" = c(as.character(sub$SHIP_ID),
-                           paste0(round(sub$time[[1]] / 3600, 2), " h"),
+                "." = c("Time", "Destination", "Speed"),
+                "Info" = c(paste0(round(sub$time[[1]] / 3600, 2), " h"),
                            sub$DESTINATION,
-                           as.character(sub$SPEED),
-                           sub$FLAG)
+                           as.character(sub$SPEED))
             )
             colnames(rv$info)[1] <- ""
         })
