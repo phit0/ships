@@ -19,8 +19,9 @@ ships <- R6::R6Class(
             self$data[, loc_diff := haversine(.SD),
                       by = .(SHIP_ID)]
             # self$data[,vessel_obs := 1:.N, by = .(SHIP_ID)]
-
             self$summary <- self$data[, .(vessel_max = max(loc_diff),
+                          vessel_type = ship_type[which.max(loc_diff)],
+                          vessel_name = SHIPNAME[which.max(loc_diff)],
                           LAT1 = LAT[which.max(loc_diff)],
                           LON1 = LON[which.max(loc_diff)],
                           LAT2 = LAT[which.max(loc_diff) + 1],
@@ -39,15 +40,35 @@ ships <- R6::R6Class(
             self$summary[, .SD[1], by = .(SHIP_ID)]
 
             },
-        display_ship = function(shipID) {
-            leaflet::leaflet() %>%
+        display_ship = function(vessel_type, shipID) {
+            leaflet::leaflet(self$summary[
+                which(vessel_type == vessel_type & SHIP_ID == shipID)
+                ]) %>%
                 leaflet::addTiles() %>%  # Add default OpenStreetMap map tiles
-                leaflet::addMarkers(lng = self$summary[SHIP_ID == shipID, LON1],
-                                    lat = self$summary[SHIP_ID == shipID, LAT1],
-                                    popup = "Start") %>%
-                leaflet::addMarkers(lng = self$summary[SHIP_ID == shipID, LON2],
-                                    lat = self$summary[SHIP_ID == shipID, LAT2],
-                                    popup = "End")
+                leaflet::addMarkers(
+                    lng = ~LON1,
+                    lat = ~LAT1,
+                    popup = "Start") %>%
+                leaflet::addMarkers(
+                    lng = ~LON2,
+                    lat = ~LAT2,
+                    popup = "End") %>%
+                leaflet::addPolylines(
+                    lng = self$summary[
+                        which(vessel_type == vessel_type & SHIP_ID == shipID),
+                        .(LON1, LON2)
+                    ] %>% as.numeric(),
+                    lat = self$summary[
+                        which(vessel_type == vessel_type & SHIP_ID == shipID),
+                        .(LAT1, LAT2)
+                    ] %>% as.numeric(),
+                    weight = 2, color = "red",
+                    label = ~paste(vessel_name,
+                                   " Distance: ",
+                                   round(vessel_max),
+                                   " m"),
+                    labelOptions = leaflet::labelOptions(noHide = T)
+                )
 
 
         }
