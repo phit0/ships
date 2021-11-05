@@ -1,0 +1,11 @@
+name: ships
+title:
+username:
+account: triplotly
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 5049187
+bundleId: 5215309
+url: https://triplotly.shinyapps.io/ships/
+when: 1636077074.96452
+lastSyncTime: 1636077074.96455

@@ -1,5 +1,7 @@
-# R6 class for ships data
-
+#' R6 class for ships data
+#'
+#' @export
+#'
 ships <- R6::R6Class(
     "ships",
     public = list(

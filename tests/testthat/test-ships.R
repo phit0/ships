@@ -1,5 +1,5 @@
 
-datapath <- system.file("../ships.csv", package = "ships")
+datapath <- system.file("extdata/ships.rda", package = "ships")
 test <- ships$new(datapath)
 
 test_that("Last distance entries of vessels are 0", {
