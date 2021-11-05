@@ -1,5 +1,6 @@
 library(shiny)
 library(ships)
+
 ui <- fluidPage(
     uiOutput("vessel_type"),
     uiOutput("ship_id"),
@@ -12,7 +13,7 @@ server <- function(input, output, session) {
     rv <- reactiveValues()
     observe({ # initialization
         isolate({
-            datapath <- system.file("extdata/ships.rda", package = "ships")
+            datapath <- system.file("extdata/ships.rds", package = "ships")
             rv$shinyShip <- ships::ships$new(datapath)
         })
         # prepare drop down menu for vessel_type
