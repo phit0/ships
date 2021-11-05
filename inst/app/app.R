@@ -12,7 +12,7 @@ server <- function(input, output, session) {
     rv <- reactiveValues()
     observe({ # initialization
         isolate({
-            datapath <- system.file("../ships.csv", package = "ships")
+            datapath <- system.file("extdata/ships.rda", package = "ships")
             rv$shinyShip <- ships$new(datapath)
         })
         # prepare drop down menu for vessel_type

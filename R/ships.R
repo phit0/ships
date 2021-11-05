@@ -7,7 +7,8 @@ ships <- R6::R6Class(
         summary = NULL,
         initialize = function(path) {
             ## Sanity checks ##
-            data <- data.table::fread(path)
+            # data <- data.table::fread(path)
+            load(path)
 
             data[, nobs := nrow(.SD), by = .(SHIP_ID)]
             data <- data[nobs > 1]
