@@ -10,12 +10,12 @@ ships <- R6::R6Class(
         initialize = function(path) {
             ## Sanity checks ##
             # data <- data.table::fread(path)
-            load(path)
+            #load(path)
 
-            data[, nobs := nrow(.SD), by = .(SHIP_ID)]
-            data <- data[nobs > 1]
+            self$data <- readRDS(path)
+            self$data[, nobs := nrow(.SD), by = .(SHIP_ID)]
+            self$data <- self$data[nobs > 1]
 
-            self$data <- data
             ## Calculate subsequent distances ##
             # Note: the last point for every SHIP_ID conects to
             # a new ship!
