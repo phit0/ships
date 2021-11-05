@@ -2,7 +2,7 @@ library(shiny)
 library(ships)
 
 ui <- fluidPage(
-    actionButton("load", "load app"),
+    #actionButton("load", "load app"),
     uiOutput("vessel_type"),
     uiOutput("ship_id"),
     leaflet::leafletOutput("map")
@@ -12,7 +12,7 @@ ui <- fluidPage(
 server <- function(input, output, session) {
 
     rv <- reactiveValues()
-    observeEvent(input$load, { # initialization
+    observe({ # initialization
         isolate({
             datapath <- system.file("extdata/ships.rds", package = "ships")
             rv$shinyShip <- ships::ships$new(datapath)
@@ -46,7 +46,7 @@ server <- function(input, output, session) {
 
     })
 
-    observeEvent(req(input$ship_id, input$vessel_type, input$load), {
+    observeEvent(req(input$ship_id, input$vessel_type), {
         output$map <- leaflet::renderLeaflet({
             rv$shinyShip$display_ship(input$vessel_type, input$ship_id)
         })
