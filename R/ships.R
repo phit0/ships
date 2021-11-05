@@ -12,15 +12,22 @@ ships <- R6::R6Class(
             # data <- data.table::fread(path)
             #load(path)
 
-            self$data <- readRDS(path)
+            self$data <- readRDS(path)[, .(LAT, LON, SHIPNAME, SHIP_ID,
+                                           DATETIME, ship_type)]
+
             self$data[, nobs := nrow(.SD), by = .(SHIP_ID)]
             self$data <- self$data[nobs > 1]
 
-            ## Calculate subsequent distances ##
-            # Note: the last point for every SHIP_ID conects to
-            # a new ship!
+            # set(self$data, i = which(nrow(.SD) == 1),
+            #     j = .(LAT, LON, SHIPNAME, SHIP_ID, DATETIME, ship_type),
+            #     value = NULL)
+
+            # Calculate distances
             self$data[, loc_diff := haversine(.SD),
                       by = .(SHIP_ID)]
+
+
+
             # self$data[,vessel_obs := 1:.N, by = .(SHIP_ID)]
             self$summary <- self$data[, .(vessel_max = max(loc_diff),
                           vessel_type = ship_type[which.max(loc_diff)],
@@ -32,6 +39,9 @@ ships <- R6::R6Class(
                           DATETIME = DATETIME[which.max(loc_diff)]),
                       by = .(SHIP_ID)]
 
+            # remove data
+            self$data <- NULL
+            gc()
 
             # self$summary <- rbind(self$summary,self$summary[.N])
             # self$summary[.N, DATETIME := as.POSIXct("2016-12-19 08:40:04")]
