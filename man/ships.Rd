@@ -8,6 +8,20 @@ R6 class for ships data
 
 R6 class for ships data
 }
+\examples{
+
+## ------------------------------------------------
+## Method `ships$new`
+## ------------------------------------------------
+
+\dontrun{test <- ships$new(inst/extdata/ships.rds)}
+
+## ------------------------------------------------
+## Method `ships$display_ship`
+## ------------------------------------------------
+
+\dontrun{test$display_ship("Cargo", "KAROLI")}
+}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
@@ -20,8 +34,30 @@ R6 class for ships data
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
+data import and calculations
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ships$new(path)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ships$new(path, mem = TRUE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{path}}{\emph{character} path to *.rds file}
+
+\item{\code{mem}}{\emph{logical} save memory? Otherwise, the complete data
+is stored}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\emph{ships} R6 instance
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{test <- ships$new(inst/extdata/ships.rds)}
+}
+\if{html}{\out{</div>}}
+
 }
 
 }
@@ -29,8 +65,26 @@ R6 class for ships data
 \if{html}{\out{<a id="method-display_ship"></a>}}
 \if{latex}{\out{\hypertarget{method-display_ship}{}}}
 \subsection{Method \code{display_ship()}}{
+Display Leaflet map
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ships$display_ship(vessel_type, shipID)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ships$display_ship(sel_type, sel_name)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{sel_type}}{selected ship type}
+
+\item{\code{sel_name}}{selected ship name}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{test$display_ship("Cargo", "KAROLI")}
+}
+\if{html}{\out{</div>}}
+
 }
 
 }

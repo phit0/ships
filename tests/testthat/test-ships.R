@@ -1,9 +1,7 @@
-
-datapath <- system.file("extdata/ships.rda", package = "ships")
-test <- ships$new(datapath)
+datapath <- system.file("extdata/ships.rds", package = "ships")
+test <- ships$new(datapath, mem = FALSE)
 
 test_that("Last distance entries of vessels are 0", {
-
     expect_true(
         all(test$data[, .SD[.N], by = .(SHIP_ID)
         ][, .(loc_diff)] == 0)

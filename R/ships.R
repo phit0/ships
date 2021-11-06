@@ -1,13 +1,27 @@
+.datatable.aware=TRUE
+
 #' R6 class for ships data
 #'
 #' @export
+#'
+#' @import data.table
 #'
 ships <- R6::R6Class(
     "ships",
     public = list(
         data = NULL,
         summary = NULL,
-        initialize = function(path) {
+        #' @description data import and calculations
+        #'
+        #' @param path *character* path to *.rds file
+        #' @param mem *logical* save memory? Otherwise, the complete data
+        #'  is stored
+        #'
+        #' @return *ships* R6 instance
+        #' @export
+        #'
+        #' @examples \dontrun{test <- ships$new(inst/extdata/ships.rds)}
+        initialize = function(path, mem = TRUE) {
             ## Load and clean data ##
 
             self$data <- readRDS(path)[, .(LAT, LON, SHIPNAME, SHIP_ID,
@@ -33,10 +47,11 @@ ships <- R6::R6Class(
                           SPEED = SPEED[which.max(loc_diff)],
                           DESTINATION = DESTINATION[which.max(loc_diff)]),
                       by = .(SHIP_ID)]
-
-            # remove data to save memory
-            self$data <- NULL
-            gc()
+            if (mem) {
+                # remove data to save memory
+                self$data <- NULL
+                gc()
+            }
 
             ## final checks ##
             # in case there is the same SHIP_ID more than once in the summary
@@ -45,6 +60,14 @@ ships <- R6::R6Class(
             self$summary[, .SD[1], by = .(SHIP_ID)]
 
             },
+        #' @description Display Leaflet map
+        #'
+        #' @param sel_type selected ship type
+        #' @param sel_name selected ship name
+        #'
+        #' @export
+        #'
+        #' @examples \dontrun{test$display_ship("Cargo", "KAROLI")}
         display_ship = function(sel_type, sel_name) {
             leaflet::leaflet(self$summary[
                 which(vessel_type == sel_type & vessel_name == sel_name)
@@ -79,6 +102,12 @@ ships <- R6::R6Class(
 
                      ))
 
+#' Calculate shortest distance between two points on earth
+#'
+#' @param dt a data.table
+#'
+#' @import data.table
+#'
 haversine <- function(dt) {
     return(
         c(geosphere::distHaversine(data.frame(dt[, .(LON, LAT)])), 0)
